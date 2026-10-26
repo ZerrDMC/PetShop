@@ -1,0 +1,672 @@
+```html
+<!DOCTYPE html>
+<html lang="es" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Huellitas & Cía. - Tienda de Mascotas</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                    },
+                    colors: {
+                        petorange: {
+                            50: '#fff7ed',
+                            100: '#ffedd5',
+                            500: '#f97316',
+                            600: '#ea580c',
+                            700: '#c2410c',
+                        },
+                        petteal: {
+                            50: '#f0fdfa',
+                            100: '#ccfbf1',
+                            500: '#14b8a6',
+                            600: '#0d9488',
+                            700: '#0f766e',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="h-full bg-slate-50 text-slate-800 font-sans flex flex-col justify-between selection:bg-petorange-500 selection:text-white">
+
+    <!-- HEADER / NAVIGATION -->
+    <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md shadow-sm border-b border-slate-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- Logo -->
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="filterCategory('todos')">
+                <div class="w-12 h-12 bg-gradient-to-tr from-petorange-500 to-amber-400 rounded-2xl flex items-center justify-center text-white shadow-md shadow-petorange-500/30 transform hover:scale-105 transition duration-300">
+                    <i class="fa-solid fa-paw text-2xl"></i>
+                </div>
+                <div>
+                    <span class="text-xl font-extrabold bg-gradient-to-r from-petorange-600 to-amber-500 bg-clip-text text-transparent">Huellitas & Cía.</span>
+                    <span class="block text-xs font-medium text-slate-400">PetShop & Veterinaria</span>
+                </div>
+            </div>
+
+            <!-- Search Bar (Desktop) -->
+            <div class="hidden md:flex items-center flex-1 max-w-md mx-8">
+                <div class="relative w-full">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none text-slate-400">
+                        <i class="fa-solid fa-search"></i>
+                    </span>
+                    <input type="text" id="searchInput" oninput="handleSearch(this.value)" placeholder="Buscar alimentos, juguetes, accesorios..." class="w-full pl-11 pr-4 py-2.5 bg-slate-100/80 border border-slate-200 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-petorange-500/50 focus:bg-white transition duration-200">
+                </div>
+            </div>
+
+            <!-- Actions / Cart Button -->
+            <div class="flex items-center space-x-4">
+                <button onclick="toggleCart()" class="relative bg-petorange-50 hover:bg-petorange-100 text-petorange-600 px-4 py-2.5 rounded-full font-semibold flex items-center space-x-2 transition duration-200 shadow-sm">
+                    <i class="fa-solid fa-cart-shopping text-lg"></i>
+                    <span class="hidden sm:inline text-sm">Carrito</span>
+                    <span id="cartBadge" class="absolute -top-1.5 -right-1.5 bg-petorange-600 text-white text-xs w-6 h-6 rounded-full flex items-center justify-center font-bold shadow-md transform scale-0 transition-transform duration-300">0</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Search Bar (Mobile) -->
+        <div class="md:hidden px-4 pb-3">
+            <div class="relative w-full">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none text-slate-400">
+                    <i class="fa-solid fa-search"></i>
+                </span>
+                <input type="text" id="searchInputMobile" oninput="handleSearch(this.value)" placeholder="Buscar productos..." class="w-full pl-11 pr-4 py-2 bg-slate-100 border border-slate-200 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-petorange-500">
+            </div>
+        </div>
+    </header>
+
+    <!-- HERO BANNER -->
+    <section class="relative bg-gradient-to-r from-petorange-500 via-amber-500 to-petteal-600 text-white overflow-hidden py-12 md:py-20">
+        <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 flex flex-col md:flex-row items-center justify-between">
+            <div class="md:w-1/2 text-center md:text-left mb-8 md:mb-0">
+                <span class="inline-block bg-white/20 backdrop-blur-md px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider mb-4 border border-white/20">🐾 ¡Amor y cuidado en cada producto!</span>
+                <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight mb-4 leading-tight">Todo lo que tu mejor amigo necesita</h1>
+                <p class="text-lg text-white/90 mb-6 font-light">Alimentos premium, juguetes divertidos, accesorios y productos de higiene con envíos rápidos a todo el país.</p>
+                <div class="flex flex-wrap justify-center md:justify-start gap-4">
+                    <a href="#catalogo" class="bg-white text-petorange-600 hover:bg-slate-100 px-6 py-3 rounded-full font-bold shadow-lg transition duration-300 transform hover:-translate-y-0.5">Ver Catálogo</a>
+                    <button onclick="filterCategory('alimentos')" class="bg-white/10 hover:bg-white/20 border border-white/30 px-6 py-3 rounded-full font-semibold backdrop-blur-sm transition duration-300">Ver Alimentos</button>
+                </div>
+            </div>
+            <div class="md:w-1/2 flex justify-center">
+                <div class="relative w-72 h-72 sm:w-80 sm:h-80 bg-white/10 backdrop-blur-md rounded-3xl p-6 border border-white/20 shadow-2xl flex items-center justify-center transform rotate-3 hover:rotate-0 transition duration-500">
+                    <i class="fa-solid fa-dog text-9xl text-white drop-shadow-lg"></i>
+                    <div class="absolute -bottom-4 -right-4 bg-white text-slate-800 p-4 rounded-2xl shadow-xl flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600 font-bold">
+                            <i class="fa-solid fa-truck-fast"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-slate-500">Envío Rápido</p>
+                            <p class="text-sm font-extrabold text-slate-800">¡Gratis desde $30.000!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MAIN CONTENT & CATALOG -->
+    <main id="catalogo" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
+        
+        <!-- Category Filter Buttons -->
+        <div class="flex items-center justify-start overflow-x-auto pb-4 mb-8 space-x-2 no-scrollbar">
+            <button onclick="filterCategory('todos')" id="cat-todos" class="category-btn whitespace-nowrap px-5 py-2.5 rounded-full text-sm font-semibold transition duration-200 bg-petorange-500 text-white shadow-md shadow-petorange-500/20">Todos</button>
+            <button onclick="filterCategory('alimentos')" id="cat-alimentos" class="category-btn whitespace-nowrap px-5 py-2.5 rounded-full text-sm font-semibold transition duration-200 bg-white text-slate-600 hover:bg-slate-100 border border-slate-200">Alimentos</button>
+            <button onclick="filterCategory('juguetes')" id="cat-juguetes" class="category-btn whitespace-nowrap px-5 py-2.5 rounded-full text-sm font-semibold transition duration-200 bg-white text-slate-600 hover:bg-slate-100 border border-slate-200">Juguetes</button>
+            <button onclick="filterCategory('accesorios')" id="cat-accesorios" class="category-btn whitespace-nowrap px-5 py-2.5 rounded-full text-sm font-semibold transition duration-200 bg-white text-slate-600 hover:bg-slate-100 border border-slate-200">Accesorios</button>
+            <button onclick="filterCategory('higiene')" id="cat-higiene" class="category-btn whitespace-nowrap px-5 py-2.5 rounded-full text-sm font-semibold transition duration-200 bg-white text-slate-600 hover:bg-slate-100 border border-slate-200">Higiene</button>
+        </div>
+
+        <!-- Section Title & Counter -->
+        <div class="flex justify-between items-center mb-6">
+            <h2 id="sectionTitle" class="text-2xl font-bold text-slate-800">Catálogo General</h2>
+            <span id="productCount" class="text-sm font-medium text-slate-500">Mostrando productos</span>
+        </div>
+
+        <!-- Product Grid -->
+        <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <!-- Dynamically injected products -->
+        </div>
+
+        <!-- Empty State Search -->
+        <div id="noResults" class="hidden text-center py-16">
+            <div class="w-20 h-20 bg-orange-100 text-orange-500 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl">
+                <i class="fa-solid fa-paw"></i>
+            </div>
+            <h3 class="text-xl font-bold text-slate-800 mb-2">No encontramos lo que buscas</h3>
+            <p class="text-slate-500 text-sm max-w-sm mx-auto mb-6">Intenta buscando con otras palabras clave o explora otra categoría.</p>
+            <button onclick="resetFilters()" class="bg-petorange-500 text-white px-6 py-2.5 rounded-full font-semibold shadow-md hover:bg-petorange-600 transition">Ver todos los productos</button>
+        </div>
+    </main>
+
+    <!-- SHOPPING CART SLIDE-OVER DRAWER -->
+    <div id="cartOverlay" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden transition-opacity opacity-0" onclick="toggleCart()"></div>
+    
+    <div id="cartDrawer" class="fixed inset-y-0 right-0 max-w-md w-full bg-white shadow-2xl z-50 transform translate-x-full transition-transform duration-300 flex flex-col">
+        <!-- Cart Header -->
+        <div class="p-5 border-b border-slate-100 flex items-center justify-between bg-slate-50">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 bg-petorange-100 rounded-xl flex items-center justify-center text-petorange-600 font-bold">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                </div>
+                <div>
+                    <h3 class="font-bold text-slate-800">Tu Carrito de Compras</h3>
+                    <p id="cartItemCountSubtitle" class="text-xs text-slate-500">0 ítems seleccionados</p>
+                </div>
+            </div>
+            <button onclick="toggleCart()" class="w-8 h-8 rounded-full bg-slate-200 hover:bg-slate-300 text-slate-600 flex items-center justify-center transition">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <!-- Cart Items List -->
+        <div id="cartItemsList" class="flex-1 overflow-y-auto p-5 divide-y divide-slate-100">
+            <!-- Dynamically injected cart items -->
+        </div>
+
+        <!-- Cart Footer / Checkout -->
+        <div id="cartFooter" class="p-5 border-t border-slate-100 bg-slate-50 hidden">
+            <div class="space-y-2 mb-4">
+                <div class="flex justify-between text-sm text-slate-500">
+                    <span>Subtotal</span>
+                    <span id="cartSubtotal">$0</span>
+                </div>
+                <div class="flex justify-between text-sm text-slate-500">
+                    <span>Envío</span>
+                    <span class="text-emerald-600 font-semibold">Gratis</span>
+                </div>
+                <div class="flex justify-between text-base font-extrabold text-slate-800 pt-2 border-t border-slate-200">
+                    <span>Total a Pagar</span>
+                    <span id="cartTotal" class="text-petorange-600 text-lg">$0</span>
+                </div>
+            </div>
+            
+            <div class="space-y-2">
+                <button onclick="checkoutMercadoPago()" class="w-full bg-[#009EE3] hover:bg-[#0082be] text-white py-3.5 px-4 rounded-xl font-bold flex items-center justify-center space-x-2 shadow-lg shadow-sky-500/25 transition transform active:scale-98">
+                    <span class="bg-white text-[#009EE3] px-2 py-0.5 rounded text-xs font-black uppercase">MP</span>
+                    <span>Pagar con Mercado Pago</span>
+                    <i class="fa-solid fa-arrow-right text-xs"></i>
+                </button>
+                <button onclick="clearCart()" class="w-full bg-white hover:bg-slate-100 text-slate-600 py-2.5 px-4 rounded-xl font-semibold border border-slate-200 text-sm transition">
+                    Vaciar Carrito
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- NOTIFICATION TOAST -->
+    <div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-slate-900 text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center space-x-3 border border-slate-700">
+        <div id="toastIcon" class="text-emerald-400">
+            <i class="fa-solid fa-circle-check text-xl"></i>
+        </div>
+        <div>
+            <p id="toastTitle" class="text-sm font-bold">¡Producto agregado!</p>
+            <p id="toastMessage" class="text-xs text-slate-400">Se añadió al carrito correctamente.</p>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-900 text-slate-400 py-12 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+            <div>
+                <div class="flex items-center space-x-3 mb-4">
+                    <div class="w-10 h-10 bg-petorange-500 rounded-xl flex items-center justify-center text-white">
+                        <i class="fa-solid fa-paw text-xl"></i>
+                    </div>
+                    <span class="text-lg font-bold text-white">Huellitas & Cía.</span>
+                </div>
+                <p class="text-sm text-slate-400 leading-relaxed">Tu tienda de confianza para consentir a tus mascotas con lo mejor en alimentación, salud y diversión.</p>
+            </div>
+            <div>
+                <h4 class="text-white font-bold mb-4 text-sm uppercase tracking-wider">Categorías</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><button onclick="filterCategory('alimentos')" class="hover:text-petorange-500 transition">Alimentos Balanceados</button></li>
+                    <li><button onclick="filterCategory('juguetes')" class="hover:text-petorange-500 transition">Juguetes Interactivos</button></li>
+                    <li><button onclick="filterCategory('accesorios')" class="hover:text-petorange-500 transition">Accesorios y Paseo</button></li>
+                    <li><button onclick="filterCategory('higiene')" class="hover:text-petorange-500 transition">Higiene y Cuidado</button></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-white font-bold mb-4 text-sm uppercase tracking-wider">Ayuda & Soporte</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="#" class="hover:text-petorange-500 transition">Estado de mis pedidos</a></li>
+                    <li><a href="#" class="hover:text-petorange-500 transition">Costos de envío</a></li>
+                    <li><a href="#" class="hover:text-petorange-500 transition">Preguntas frecuentes</a></li>
+                    <li><a href="#" class="hover:text-petorange-500 transition">Contacto veterinario</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-white font-bold mb-4 text-sm uppercase tracking-wider">Métodos de Pago</h4>
+                <p class="text-sm mb-4">Aceptamos todas las tarjetas de crédito, débito y Mercado Pago de forma segura.</p>
+                <div class="flex space-x-3 text-2xl text-slate-300">
+                    <i class="fa-brands fa-cc-visa" title="Visa"></i>
+                    <i class="fa-brands fa-cc-mastercard" title="Mastercard"></i>
+                    <i class="fa-brands fa-cc-amex" title="Amex"></i>
+                    <i class="fa-solid fa-wallet" title="Mercado Pago"></i>
+                </div>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 border-t border-slate-800 text-center text-xs text-slate-500">
+            &copy; 2026 Huellitas & Cía. Todos los derechos reservados. Diseñado para consentir a tus mascotas.
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT APP LOGIC -->
+    <script>
+        // Product Database
+        const products = [
+            {
+                id: 1,
+                name: "Alimento Royal Canin Adult Perro 15kg",
+                category: "alimentos",
+                price: 45990,
+                rating: 4.9,
+                reviews: 128,
+                image: "https://placehold.co/400x400/ffedd5/c2410c?text=Royal+Canin+15kg",
+                badge: "Más Vendido",
+                description: "Alimento balanceado completo para perros adultos de razas medianas y grandes."
+            },
+            {
+                id: 2,
+                name: "Alimento Cat Chow Gato Adulto 8kg",
+                category: "alimentos",
+                price: 24500,
+                rating: 4.8,
+                reviews: 94,
+                image: "https://placehold.co/400x400/ccfbf1/0f766e?text=Cat+Chow+8kg",
+                badge: "Oferta",
+                description: "Defensa+ para proteger su sistema inmunológico y vías urinarias saludables."
+            },
+            {
+                id: 3,
+                name: "Mordillo Hueso de Goma Resistente",
+                category: "juguetes",
+                price: 5800,
+                rating: 4.6,
+                reviews: 45,
+                image: "https://placehold.co/400x400/ffedd5/c2410c?text=Hueso+Mordillo",
+                badge: "Popular",
+                description: "Juguete indestructible de goma atóxica ideal para limpieza dental canina."
+            },
+            {
+                id: 4,
+                name: "Caña con Plumas y Cascabel para Gatos",
+                category: "juguetes",
+                price: 3400,
+                rating: 4.9,
+                reviews: 67,
+                image: "https://placehold.co/400x400/ccfbf1/0f766e?text=Juguete+Gato",
+                badge: "Nuevo",
+                description: "Estimula el instinto cazador de tu felino con horas de diversión activa."
+            },
+            {
+                id: 5,
+                name: "Col Correa Extensible 5 metros",
+                category: "accesorios",
+                price: 12900,
+                rating: 4.7,
+                reviews: 52,
+                image: "https://placehold.co/400x400/ffedd5/c2410c?text=Correa+Extensible",
+                badge: "",
+                description: "Correa retráctil resistente con freno de seguridad de un solo toque."
+            },
+            {
+                id: 6,
+                name: "Cucha Térmica Acolchada Mediana",
+                category: "accesorios",
+                price: 28900,
+                rating: 4.9,
+                reviews: 83,
+                image: "https://placehold.co/400x400/ffedd5/c2410c?text=Cucha+Mascota",
+                badge: "Destacado",
+                description: "Colchón y cucha desmontable, lavable y súper abrigada para invierno y verano."
+            },
+            {
+                id: 7,
+                name: "Shampoo Hipoalergénico con Aloe Vera 500ml",
+                category: "higiene",
+                price: 7500,
+                rating: 4.8,
+                reviews: 39,
+                image: "https://placehold.co/400x400/ccfbf1/0f766e?text=Shampoo+Aloe",
+                badge: "",
+                description: "Fórmula suave que hidrata la piel y deja el pelaje brillante sin irritaciones."
+            },
+            {
+                id: 8,
+                name: "Piedras Sanitarias Sílicas 4kg",
+                category: "higiene",
+                price: 8200,
+                rating: 4.7,
+                reviews: 110,
+                image: "https://placehold.co/400x400/ccfbf1/0f766e?text=Piedras+Silicas",
+                badge: "Más Vendido",
+                description: "Máxima absorción de olores y líquidos sin dejar polvo en las patas de tu gato."
+            },
+            {
+                id: 9,
+                name: "Snack Dental Pedigree Biscrok 500g",
+                category: "alimentos",
+                price: 4600,
+                rating: 4.5,
+                reviews: 31,
+                image: "https://placehold.co/400x400/ffedd5/c2410c?text=Biscrok+Snacks",
+                badge: "",
+                description: "Galletitas crujientes con calcio y vitaminas para fortalecer sus dientes."
+            },
+            {
+                id: 10,
+                name: "Rascador Torre para Gatos con 3 Niveles",
+                category: "juguetes",
+                price: 35000,
+                rating: 5.0,
+                reviews: 74,
+                image: "https://placehold.co/400x400/ccfbf1/0f766e?text=Rascador+Torre",
+                badge: "Premium",
+                description: "Centro de entretenimiento con soga sisal, cueva y plataformas de descanso."
+            }
+        ];
+
+        // State variables
+        let cart = [];
+        let currentCategory = 'todos';
+        let searchQuery = '';
+
+        // DOM Loaded Init
+        document.addEventListener('DOMContentLoaded', () => {
+            renderProducts(products);
+            updateCartUI();
+        });
+
+        // Render Product Grid
+        function renderProducts(items) {
+            const grid = document.getElementById('productGrid');
+            const noResults = document.getElementById('noResults');
+            const productCount = document.getElementById('productCount');
+            
+            grid.innerHTML = '';
+            productCount.textContent = `Mostrando ${items.length} productos`;
+
+            if (items.length === 0) {
+                noResults.classList.remove('hidden');
+                return;
+            } else {
+                noResults.classList.add('hidden');
+            }
+
+            items.forEach(product => {
+                const card = document.createElement('div');
+                card.className = "bg-white rounded-2xl shadow-sm hover:shadow-xl border border-slate-100 overflow-hidden flex flex-col justify-between transition-all duration-300 transform hover:-translate-y-1 group";
+                
+                let badgeHTML = '';
+                if (product.badge) {
+                    let badgeColor = 'bg-petorange-500 text-white';
+                    if(product.badge === 'Oferta') badgeColor = 'bg-rose-500 text-white';
+                    if(product.badge === 'Nuevo') badgeColor = 'bg-petteal-500 text-white';
+                    if(product.badge === 'Premium') badgeColor = 'bg-amber-500 text-white';
+                    badgeHTML = `<span class="absolute top-3 left-3 ${badgeColor} text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider shadow-sm">${product.badge}</span>`;
+                }
+
+                card.innerHTML = `
+                    <div class="relative bg-slate-100 overflow-hidden h-48 flex items-center justify-center p-4">
+                        ${badgeHTML}
+                        <img src="${product.image}" alt="${product.name}" onerror="this.src='https://placehold.co/400x400/f1f5f9/64748b?text=PetShop'" class="w-full h-full object-cover rounded-xl group-hover:scale-105 transition duration-500">
+                    </div>
+                    <div class="p-5 flex flex-col flex-grow justify-between">
+                        <div>
+                            <div class="flex items-center space-x-1 text-amber-400 text-xs mb-1">
+                                <i class="fa-solid fa-star"></i>
+                                <span class="font-bold text-slate-700">${product.rating}</span>
+                                <span class="text-slate-400">(${product.reviews})</span>
+                            </div>
+                            <h3 class="font-bold text-slate-800 text-base mb-1 line-clamp-1 group-hover:text-petorange-600 transition">${product.name}</h3>
+                            <p class="text-xs text-slate-500 mb-4 line-clamp-2">${product.description}</p>
+                        </div>
+                        <div class="flex items-center justify-between pt-3 border-t border-slate-100 mt-auto">
+                            <div>
+                                <span class="text-xs text-slate-400 block">Precio</span>
+                                <span class="text-lg font-extrabold text-slate-800">$${product.price.toLocaleString('es-AR')}</span>
+                            </div>
+                            <button onclick="addToCart(${product.id})" class="bg-petorange-500 hover:bg-petorange-600 text-white w-10 h-10 rounded-xl flex items-center justify-center shadow-md shadow-petorange-500/25 transition duration-200 transform active:scale-95" title="Agregar al carrito">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Filter by Category
+        function filterCategory(category) {
+            currentCategory = category;
+            
+            // Update buttons active style
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.className = "category-btn whitespace-nowrap px-5 py-2.5 rounded-full text-sm font-semibold transition duration-200 bg-white text-slate-600 hover:bg-slate-100 border border-slate-200";
+            });
+            
+            const activeBtn = document.getElementById(`cat-${category}`);
+            if(activeBtn) {
+                activeBtn.className = "category-btn whitespace-nowrap px-5 py-2.5 rounded-full text-sm font-semibold transition duration-200 bg-petorange-500 text-white shadow-md shadow-petorange-500/20";
+            }
+
+            // Update section title
+            const titles = {
+                'todos': 'Catálogo General',
+                'alimentos': 'Alimentos Balanceados',
+                'juguetes': 'Juguetes Interactivos',
+                'accesorios': 'Accesorios y Paseo',
+                'higiene': 'Higiene y Cuidado'
+            };
+            document.getElementById('sectionTitle').textContent = titles[category] || 'Resultados';
+
+            applyFilters();
+        }
+
+        // Search Handler
+        function handleSearch(query) {
+            searchQuery = query.toLowerCase().trim();
+            // Sync mobile/desktop input fields
+            document.getElementById('searchInput').value = query;
+            document.getElementById('searchInputMobile').value = query;
+            applyFilters();
+        }
+
+        // Combine Category and Search filters
+        function applyFilters() {
+            let filtered = products;
+
+            if (currentCategory !== 'todos') {
+                filtered = filtered.filter(p => p.category === currentCategory);
+            }
+
+            if (searchQuery !== '') {
+                filtered = filtered.filter(p => 
+                    p.name.toLowerCase().includes(searchQuery) || 
+                    p.description.toLowerCase().includes(searchQuery)
+                );
+            }
+
+            renderProducts(filtered);
+        }
+
+        function resetFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('searchInputMobile').value = '';
+            searchQuery = '';
+            filterCategory('todos');
+        }
+
+        // Cart Actions
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+
+            const existingItem = cart.find(item => item.id === productId);
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({ ...product, quantity: 1 });
+            }
+
+            updateCartUI();
+            showToast("¡Producto agregado!", `${product.name} se añadió a tu carrito.`);
+        }
+
+        function changeQuantity(productId, delta) {
+            const item = cart.find(i => i.id === productId);
+            if (!item) return;
+
+            item.quantity += delta;
+            if (item.quantity <= 0) {
+                cart = cart.filter(i => i.id !== productId);
+            }
+            updateCartUI();
+        }
+
+        function removeFromCart(productId) {
+            cart = cart.filter(i => i.id !== productId);
+            updateCartUI();
+        }
+
+        function clearCart() {
+            cart = [];
+            updateCartUI();
+            showToast("Carrito vaciado", "Se han eliminado todos los productos.", "text-rose-500");
+        }
+
+        // Update Cart Drawer & Badges
+        function updateCartUI() {
+            const badge = document.getElementById('cartBadge');
+            const subtitle = document.getElementById('cartItemCountSubtitle');
+            const list = document.getElementById('cartItemsList');
+            const footer = document.getElementById('cartFooter');
+            
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+            // Badge count
+            if (totalItems > 0) {
+                badge.textContent = totalItems;
+                badge.classList.remove('scale-0');
+                badge.classList.add('scale-100');
+            } else {
+                badge.classList.remove('scale-100');
+                badge.classList.add('scale-0');
+            }
+
+            subtitle.textContent = `${totalItems} ${totalItems === 1 ? 'ítem seleccionado' : 'ítems seleccionados'}`;
+
+            // Render Cart Items
+            list.innerHTML = '';
+            if (cart.length === 0) {
+                list.innerHTML = `
+                    <div class="text-center py-16">
+                        <div class="w-16 h-16 bg-slate-100 text-slate-400 rounded-full flex items-center justify-center mx-auto mb-3 text-2xl">
+                            <i class="fa-solid fa-cart-shopping"></i>
+                        </div>
+                        <p class="font-bold text-slate-700 mb-1">Tu carrito está vacío</p>
+                        <p class="text-xs text-slate-400">¡Agrega productos para consentir a tu mascota!</p>
+                    </div>
+                `;
+                footer.classList.add('hidden');
+            } else {
+                footer.classList.remove('hidden');
+                cart.forEach(item => {
+                    const row = document.createElement('div');
+                    row.className = "py-4 flex items-center justify-between space-x-3";
+                    row.innerHTML = `
+                        <img src="${item.image}" alt="${item.name}" class="w-16 h-16 object-cover rounded-xl bg-slate-100 flex-shrink-0">
+                        <div class="flex-1 min-w-0">
+                            <h4 class="text-sm font-bold text-slate-800 truncate">${item.name}</h4>
+                            <p class="text-xs font-semibold text-petorange-600 mb-2">$${(item.price * item.quantity).toLocaleString('es-AR')}</p>
+                            <div class="flex items-center space-x-2">
+                                <button onclick="changeQuantity(${item.id}, -1)" class="w-6 h-6 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center text-xs font-bold transition">-</button>
+                                <span class="text-xs font-bold text-slate-700 w-5 text-center">${item.quantity}</span>
+                                <button onclick="changeQuantity(${item.id}, 1)" class="w-6 h-6 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center text-xs font-bold transition">+</button>
+                            </div>
+                        </div>
+                        <button onclick="removeFromCart(${item.id})" class="text-slate-400 hover:text-rose-500 p-2 transition">
+                            <i class="fa-solid fa-trash-can text-sm"></i>
+                        </button>
+                    `;
+                    list.appendChild(row);
+                });
+            }
+
+            document.getElementById('cartSubtotal').textContent = `$${subtotal.toLocaleString('es-AR')}`;
+            document.getElementById('cartTotal').textContent = `$${subtotal.toLocaleString('es-AR')}`;
+        }
+
+        // Toggle Cart Drawer
+        function toggleCart() {
+            const overlay = document.getElementById('cartOverlay');
+            const drawer = document.getElementById('cartDrawer');
+            
+            if (drawer.classList.contains('translate-x-full')) {
+                overlay.classList.remove('hidden');
+                setTimeout(() => overlay.classList.remove('opacity-0'), 10);
+                drawer.classList.remove('translate-x-full');
+            } else {
+                overlay.classList.add('opacity-0');
+                drawer.classList.add('translate-x-full');
+                setTimeout(() => overlay.classList.add('hidden'), 300);
+            }
+        }
+
+        // Mercado Pago Simulated Checkout
+        function checkoutMercadoPago() {
+            if (cart.length === 0) return;
+            
+            showToast("Redirigiendo...", "Conectando con pasarela de pago segura...", "text-sky-400");
+            
+            setTimeout(() => {
+                // Simulate checkout redirection link to Mercado Pago
+                const simulatedMPUrl = "https://www.mercadopago.com.ar/checkout/v1/redirect?pref_id=simulated_petshop_checkout";
+                
+                // Open in new tab or simulate redirection notice
+                const confirmRedirect = confirm("Serás redirigido a Mercado Pago para completar tu pago de forma segura. ¿Deseas continuar?");
+                if(confirmRedirect || true) {
+                    window.open(simulatedMPUrl, '_blank');
+                    clearCart();
+                    toggleCart();
+                    showToast("¡Pedido Creado!", "Simulación de pago exitosa. ¡Gracias por tu compra!", "text-emerald-400");
+                }
+            }, 1000);
+        }
+
+        // Toast Notification Helper
+        function showToast(title, message, iconColorClass = "text-emerald-400") {
+            const toast = document.getElementById('toast');
+            const toastTitle = document.getElementById('toastTitle');
+            const toastMessage = document.getElementById('toastMessage');
+            const toastIcon = document.getElementById('toastIcon');
+
+            toastTitle.textContent = title;
+            toastMessage.textContent = message;
+            toastIcon.className = iconColorClass;
+
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3500);
+        }
+    </script>
+</body>
+</html>
+```
